@@ -4,6 +4,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { CurrencyProvider } from "./CurrencyProvider";
 
+import { ClerkProvider } from "@clerk/nextjs";
+import Footer from "@/components/layout/Footer";
+import Navbar from "@/components/layout/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,16 +21,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        {/* Wrap everything with CurrencyProvider */}
-        <CurrencyProvider>
-          <div className="flex flex-col min-h-screen">
-            
-            <main className="flex-1">{children}</main>
-           
-          </div>
-        </CurrencyProvider>
+        <ClerkProvider>
+          <CurrencyProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </CurrencyProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
