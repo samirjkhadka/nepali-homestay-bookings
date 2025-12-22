@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Heart, Verified } from "lucide-react";
 import { ListingCardProps } from "@/types/listing";
 
-
 export default function ListingCard({ listing }: ListingCardProps) {
   return (
     <Link href={`/listings/${listing.id}`} className="group block">
