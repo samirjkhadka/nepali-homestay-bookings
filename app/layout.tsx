@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   description: "Authentic family-run homestays across Nepal",
 };
 
+const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
 export default function RootLayout({
   children,
 }: {
@@ -23,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ClerkProvider>
+        <ClerkProvider publishableKey= {publishableKey}>
           <CurrencyProvider>
             <div className="flex flex-col min-h-screen">
               <Navbar />
