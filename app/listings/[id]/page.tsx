@@ -240,7 +240,7 @@ export default async function ListingDetailPage({
                     key={i}
                     className="flex gap-6 pb-8 border-b last:border-0"
                   >
-                    <div className="relative w-24 h-24 flex-shrink-0">
+                    <div className="relative w-24 h-24 shrink-0">
                       <Image
                         src={host.avatar}
                         alt={host.name}

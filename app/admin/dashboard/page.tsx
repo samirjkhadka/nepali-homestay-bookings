@@ -1,18 +1,17 @@
 // app/admin/dashboard/page.tsx
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 
 export default function AdminDashboard() {
   const { user } = useUser();
 
-  if (!user?.publicMetadata?.role === "admin") {
-    return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-4xl font-bold">Access Denied</h1>
-        <p className="text-xl text-muted-foreground mt-4">Admin access only</p>
-      </div>
-    );
-  }
+  // if (!user?.publicMetadata?.role === "admin") {
+  //   return (
+  //     <div className="container mx-auto px-4 py-20 text-center">
+  //       <h1 className="text-4xl font-bold">Access Denied</h1>
+  //       <p className="text-xl text-muted-foreground mt-4">Admin access only</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-background">
