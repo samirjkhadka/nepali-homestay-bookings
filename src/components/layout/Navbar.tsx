@@ -8,7 +8,13 @@ import { useState } from "react";
 import { Menu, Sun, Moon, Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 
 import { useTheme } from "next-themes";
 import { useCurrency } from "../../../app/CurrencyProvider";
@@ -17,8 +23,8 @@ const NAV_LINKS = [
   { href: "/search", label: "Homestays" },
   { href: "/blog", label: "Blog" },
   { href: "/videos", label: "YouTube Videos" },
-  { href: "/#about", label: "About Us" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {
@@ -44,7 +50,9 @@ export default function Navbar() {
                 className="object-contain"
               />
             </div>
-            <span className="font-bold text-xl hidden sm:block">Nepali Homestays</span>
+            <span className="font-bold text-xl hidden sm:block">
+              Nepali Homestays
+            </span>
           </Link>
 
           {/* Desktop Nav */}
@@ -81,13 +89,19 @@ export default function Navbar() {
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
             </Button>
 
             {/* Auth Buttons */}
             <SignedOut>
               <SignInButton mode="modal">
-                <Button variant="ghost" size="sm">Sign In</Button>
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
               </SignInButton>
               <SignUpButton mode="modal">
                 <Button size="sm">Sign Up</Button>
@@ -127,13 +141,24 @@ export default function Navbar() {
 
                   <div className="border-t pt-6">
                     <SignedIn>
-                      <Link href="/dashboard/guest" onClick={() => setMobileOpen(false)} className="block py-2">
+                      <Link
+                        href="/dashboard/guest"
+                        onClick={() => setMobileOpen(false)}
+                        className="block py-2"
+                      >
                         My Bookings
                       </Link>
-                      <Link href="/wishlist" onClick={() => setMobileOpen(false)} className="block py-2">
+                      <Link
+                        href="/wishlist"
+                        onClick={() => setMobileOpen(false)}
+                        className="block py-2"
+                      >
                         Wishlist
                       </Link>
-                      <button onClick={() => signOut()} className="flex items-center gap-2 text-destructive">
+                      <button
+                        onClick={() => signOut()}
+                        className="flex items-center gap-2 text-destructive"
+                      >
                         <LogOut className="h-4 w-4" /> Sign Out
                       </button>
                     </SignedIn>

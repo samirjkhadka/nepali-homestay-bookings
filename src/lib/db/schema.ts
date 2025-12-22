@@ -1,5 +1,15 @@
 // src/lib/db/schema.ts
-import { pgTable, serial, text, integer, timestamp, boolean, decimal, jsonb, varchar } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  text,
+  integer,
+  timestamp,
+  boolean,
+  decimal,
+  jsonb,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 // Users table (synced with Clerk)
@@ -12,7 +22,9 @@ export const users = pgTable("users", {
   avatarUrl: text("avatar_url"),
   role: varchar("role", { length: 20 }).default("guest"), // 'guest', 'host', 'admin'
   phone: varchar("phone", { length: 20 }),
-  preferredCurrency: varchar("preferred_currency", { length: 10 }).default("NPR"),
+  preferredCurrency: varchar("preferred_currency", { length: 10 }).default(
+    "NPR"
+  ),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -43,7 +55,9 @@ export const listings = pgTable("listings", {
 // Hosts table (multiple hosts per listing)
 export const hosts = pgTable("hosts", {
   id: serial("id").primaryKey(),
-  listingId: integer("listing_id").references(() => listings.id).notNull(),
+  listingId: integer("listing_id")
+    .references(() => listings.id)
+    .notNull(),
   name: varchar("name", { length: 100 }).notNull(),
   avatar: text("avatar"),
   role: varchar("role", { length: 50 }), // Owner, Co-Host, Chef, etc.
@@ -55,8 +69,12 @@ export const hosts = pgTable("hosts", {
 // Bookings table
 export const bookings = pgTable("bookings", {
   id: serial("id").primaryKey(),
-  listingId: integer("listing_id").references(() => listings.id).notNull(),
-  guestId: integer("guest_id").references(() => users.id).notNull(),
+  listingId: integer("listing_id")
+    .references(() => listings.id)
+    .notNull(),
+  guestId: integer("guest_id")
+    .references(() => users.id)
+    .notNull(),
   checkIn: timestamp("check_in").notNull(),
   checkOut: timestamp("check_out").notNull(),
   guests: integer("guests").notNull(),
