@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/layout/Navbar.tsx
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Sun, Moon, Globe, Search, Heart, User, LogOut } from "lucide-react";
+import { Menu, Sun, Moon, Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
@@ -22,8 +23,12 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { currency, setCurrency, symbol } = useCurrency();
+  const { currency, setCurrency } = useCurrency();
   const { theme, setTheme } = useTheme();
+
+  const signOut = () => {
+    window.location.href = "/sign-out";
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b">
