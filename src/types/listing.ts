@@ -55,3 +55,36 @@ export const CURRENCY_SYMBOLS: Record<SupportedCurrency, string> = {
   GBP: "£",
   INR: "₹",
 };
+
+export type SearchListing = {
+  id: string;
+  title: string;
+  location: string;
+  province: string;
+  priceNPR: number;
+  imageUrl: string;
+  hostName: string;
+  hostAvatar: string;
+  rating: number;
+  reviewCount: number;
+  isVerified: boolean;
+  instantBook: boolean;
+  displayPrice: number;
+};
+
+export type ListingCardProps = {
+  listing: {
+    id: string;
+    title: string;
+    location: string;
+    province: string;
+    imageUrl: string;
+    hostName: string;
+    hostAvatar: string;
+    rating: number;
+    reviewCount: number;
+    displayPrice: number;
+    isVerified: boolean;
+    instantBook: boolean;
+  };
+};
