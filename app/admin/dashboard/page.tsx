@@ -1,8 +1,7 @@
-// app/admin/dashboard/page.tsx
-import { useUser } from "@clerk/nextjs";
+
 
 export default function AdminDashboard() {
-  const { user } = useUser();
+  // const { user } = useUser();
 
   // if (!user?.publicMetadata?.role === "admin") {
   //   return (
