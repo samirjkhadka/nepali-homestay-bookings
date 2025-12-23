@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import Filters from "./Filters";
 import SearchResults from "./SearchResults";
 import SearchSkeleton from "./SearchSkeleton";
+import { searchListings } from "@/lib/db/queries/search";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,20 @@ export default async function SearchPage({
   searchParams: Promise<Record<string, string>>;
 }) {
   const params = await searchParams;
+
+  const q = params.q || "";
+  const province = params.province || "";
+  const minPrice = params.minPrice ? Number(params.minPrice) : undefined;
+  const maxPrice = params.maxPrice ? Number(params.maxPrice) : undefined;
+  const guests = params.guests ? Number(params.guests) : undefined;
+
+  const initialResults = await searchListings({
+    q,
+    province,
+    minPrice,
+    maxPrice,
+    guests,
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -25,7 +40,7 @@ export default async function SearchPage({
 
           <section className="lg:col-span-3">
             <Suspense fallback={<SearchSkeleton />}>
-              <SearchResults searchParams={params} />
+              <SearchResults initialResults={initialResults} searchParams={params} />
             </Suspense>
           </section>
         </div>

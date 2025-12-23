@@ -18,7 +18,10 @@ export default function BookingWidget({ listing }: { listing: any }) {
 
   useEffect(() => {
     if (checkIn && checkOut && checkIn < checkOut) {
-      const nights = Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24));
+      const nights = Math.ceil(
+        (new Date(checkOut).getTime() - new Date(checkIn).getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
       if (nights > 0) {
         convertPrice(listing.priceNPR * nights, currency).then((converted) => {
           setTotal(Math.round(converted));
@@ -29,13 +32,18 @@ export default function BookingWidget({ listing }: { listing: any }) {
     }
   }, [checkIn, checkOut, currency, listing.priceNPR]);
 
-  const nightPrice = Math.round(listing.priceNPR * (currency === "NPR" ? 1 : 0.0075)); // rough conversion until action
+  const nightPrice = Math.round(
+    listing.priceNPR * (currency === "NPR" ? 1 : 0.0075)
+  ); // rough conversion until action
 
   return (
     <div className="bg-card border rounded-2xl p-6 shadow-xl">
       <div className="flex justify-between items-baseline mb-6">
         <div>
-          <span className="text-3xl font-bold">{symbol}{nightPrice}</span>
+          <span className="text-3xl font-bold">
+            {symbol}
+            {nightPrice}
+          </span>
           <span className="text-lg text-muted-foreground"> / night</span>
         </div>
         {listing.instantBook && (
@@ -86,7 +94,10 @@ export default function BookingWidget({ listing }: { listing: any }) {
         <div className="border-t pt-4 mb-6">
           <div className="flex justify-between text-lg font-semibold">
             <span>Total</span>
-            <span>{symbol}{total}</span>
+            <span>
+              {symbol}
+              {total}
+            </span>
           </div>
         </div>
       )}
