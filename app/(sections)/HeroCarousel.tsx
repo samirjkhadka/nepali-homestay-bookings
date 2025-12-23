@@ -1,8 +1,8 @@
 // app/(sections)/HeroCarousel.tsx
 'use client';
+
 import Image from "next/image";
 import Link from "next/link";
-
 import { useEffect, useState } from "react";
 import { useCurrency } from "../CurrencyProvider";
 
@@ -19,32 +19,9 @@ type HeroListing = {
   instantBook: boolean;
 };
 
-const mockHeroes: HeroListing[] = [
-  {
-    id: "1",
-    title: "Traditional Newari House in Bhaktapur",
-    location: "Bhaktapur",
-    province: "Bagmati",
-    priceNPR: 1445,
-    imageUrl: "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    hostName: "Kamala Shakya",
-    hostAvatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=1",
-    isVerified: true,
-    instantBook: true,
-  },
-  {
-    id: "2",
-    title: "Lakeside Mountain View Homestay",
-    location: "Pokhara",
-    province: "Gandaki",
-    priceNPR: 2235,
-    imageUrl: "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    hostName: "Binod Gurung",
-    hostAvatar: "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=1",
-    isVerified: true,
-    instantBook: false,
-  },
-];
+type HeroCarouselProps = {
+  initialListings: HeroListing[];
+};
 
 const rates: Record<string, number> = {
   NPR: 1,
@@ -54,22 +31,23 @@ const rates: Record<string, number> = {
   INR: 0.625,
 };
 
-export default function HeroCarousel() {
+export default function HeroCarousel({ initialListings }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
   const { currency, symbol } = useCurrency();
+  const listings = initialListings;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % mockHeroes.length);
+      setCurrent((prev) => (prev + 1) % listings.length);
     }, 7000);
     return () => clearInterval(interval);
-  }, []);
+  }, [listings.length]);
 
-  const listing = mockHeroes[current];
+  const listing = listings[current];
   const price = Math.round(listing.priceNPR * rates[currency]);
 
   return (
-    <section className="relative h-screen min-h-150 overflow-hidden">
+    <section className="relative h-screen min-h-[600px] overflow-hidden">
       <Image
         src={listing.imageUrl}
         alt={listing.title}
@@ -78,7 +56,7 @@ export default function HeroCarousel() {
         priority
       />
 
-      <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
       <div className="absolute inset-0 flex items-end pb-20 px-8 md:px-16">
         <div className="max-w-4xl text-white">
@@ -126,15 +104,15 @@ export default function HeroCarousel() {
         </div>
       </div>
 
-      {/* Dots */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
-        {mockHeroes.map((_, i) => (
+        {listings.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
             className={`w-3 h-3 rounded-full transition-all ${
               i === current ? "bg-white w-12" : "bg-white/50"
             }`}
+            aria-label={`Go to slide ${i + 1}`}
           />
         ))}
       </div>
