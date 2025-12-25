@@ -4,7 +4,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, Sun, Moon, Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -18,26 +18,29 @@ import {
 
 import { useTheme } from "next-themes";
 import { useCurrency } from "../../../app/CurrencyProvider";
-
-const NAV_LINKS = [
-  { href: "/search", label: "Homestays" },
-  { href: "/blog", label: "Blog" },
-  { href: "/videos", label: "YouTube Videos" },
-  { href: "/about", label: "About Us" },
-  { href: "/contact", label: "Contact" },
-];
+import { NAV_LINKS } from "@/lib/constants";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { currency, setCurrency } = useCurrency();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
 
   const signOut = () => {
     window.location.href = "/sign-out";
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b ">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -50,18 +53,18 @@ export default function Navbar() {
                 className="object-contain"
               />
             </div>
-            <span className="font-bold text-xl hidden sm:block">
+            <span className="font-bold text-xl hidden sm:block text-primary">
               Nepali Homestays
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-8 ">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-sm font-medium hover:text-primary transition-colors hover:underline "
               >
                 {link.label}
               </Link>
@@ -84,17 +87,17 @@ export default function Navbar() {
             </select>
 
             {/* Dark Mode Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
+            {/* <Button variant="ghost" size="icon" onClick={toggleTheme}>
+              {mounted ? (
+                resolvedTheme === "dark" ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )
               ) : (
-                <Moon className="h-5 w-5" />
+                <Sun className="h-5 w-5" />
               )}
-            </Button>
+            </Button> */}
 
             {/* Auth Buttons */}
             <SignedOut>

@@ -27,8 +27,8 @@ export type Host = {
   avatar?: string;
   role?: string;
   bio?: string;
-  languages?: string[];
-  badges?: string[];
+  languages: string[];
+  badges: string[];
 };
 
 // src/types/booking.ts
@@ -87,4 +87,28 @@ export type ListingCardProps = {
     isVerified: boolean;
     instantBook: boolean;
   };
+};
+
+export type ListingFormProps = {
+  initialData?: {
+    id?: number;
+    title: string;
+    description: string;
+    homestay_type: string;
+    number_of_houses?: number | null;
+    
+    province: string;
+    district: string;
+    municipality: string;
+    price_npr: number;
+    max_guests: number;
+    bedrooms: number;
+    bathrooms: number;
+    amenities: string[];
+    images: string[];
+    ward_no: string;
+    street: string;
+    way_to_get_there: string[];
+    hosts: Host[];
+  }
 };

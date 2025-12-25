@@ -1,91 +1,84 @@
 // app/search/Filters.tsx
 "use client";
 
-import { PROVINCES } from "@/types/others";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useDebouncedCallback } from "use-debounce";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-export default function Filters({
-  searchParams,
-}: {
-  searchParams: Record<string, string>;
-}) {
+export default function Filters() {
   const router = useRouter();
-  const searchParamsObj = useSearchParams();
+  const searchParams = useSearchParams();
 
-  const updateSearch = useDebouncedCallback((key: string, value: string) => {
-    const params = new URLSearchParams(searchParamsObj);
-    if (value) {
-      params.set(key, value);
+  // Safe handling — searchParams can be null on first load
+  const current = new URLSearchParams(searchParams?.toString() || "");
+
+  const handleChange = (key: string, value: string) => {
+    if (value.trim()) {
+      current.set(key, value.trim());
     } else {
-      params.delete(key);
+      current.delete(key);
     }
-    router.push(`/search?${params.toString()}`);
-  }, 300);
+    const query = current.toString();
+    router.push(`/search${query ? `?${query}` : ""}`);
+  };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium mb-2">
-          Search Location
-        </label>
-        <input
-          type="text"
-          placeholder="Bhaktapur, Pokhara..."
-          defaultValue={searchParams.q || ""}
-          onChange={(e) => updateSearch("q", e.target.value)}
-          className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+    <div className="space-y-6 bg-card border rounded-xl p-6 sticky top-24">
+      <h2 className="text-2xl font-semibold mb-4">Filters</h2>
+
+      <div className="space-y-2">
+        <Label htmlFor="q">Search</Label>
+        <Input
+          id="q"
+          placeholder="Location, title..."
+          value={searchParams?.get("q") || ""}
+          onChange={(e) => handleChange("q", e.target.value)}
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-2">Province</label>
-        <select
-          defaultValue={searchParams.province || ""}
-          onChange={(e) => updateSearch("province", e.target.value)}
-          className="w-full px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          <option value="">All Provinces</option>
-          {PROVINCES.map((p) => (
-            <option key={p} value={p}>
-              {p}
-            </option>
-          ))}
-        </select>
+      <div className="space-y-2">
+        <Label htmlFor="province">Province</Label>
+        <Input
+          id="province"
+          placeholder="e.g., Bagmati"
+          value={searchParams?.get("province") || ""}
+          onChange={(e) => handleChange("province", e.target.value)}
+        />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-2">
-          Price Range (NPR)
-        </label>
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <input
+          <Label htmlFor="minPrice">Min Price (NPR)</Label>
+          <Input
+            id="minPrice"
             type="number"
-            placeholder="Min"
-            defaultValue={searchParams.minPrice || ""}
-            onChange={(e) => updateSearch("minPrice", e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border bg-background"
+            placeholder="From"
+            value={searchParams?.get("minPrice") || ""}
+            onChange={(e) => handleChange("minPrice", e.target.value)}
           />
-          <input
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="maxPrice">Max Price (NPR)</Label>
+          <Input
+            id="maxPrice"
             type="number"
-            placeholder="Max"
-            defaultValue={searchParams.maxPrice || ""}
-            onChange={(e) => updateSearch("maxPrice", e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border bg-background"
+            placeholder="To"
+            value={searchParams?.get("maxPrice") || ""}
+            onChange={(e) => handleChange("maxPrice", e.target.value)}
           />
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-2">Guests</label>
-        <input
+      <div className="space-y-2">
+        <Label htmlFor="guests">Guests</Label>
+        <Input
+          id="guests"
           type="number"
           min="1"
-          max="20"
           placeholder="Number of guests"
-          defaultValue={searchParams.guests || ""}
-          onChange={(e) => updateSearch("guests", e.target.value)}
-          className="w-full px-4 py-2 rounded-lg border bg-background"
+          value={searchParams?.get("guests") || ""}
+          onChange={(e) => handleChange("guests", e.target.value)}
         />
       </div>
     </div>

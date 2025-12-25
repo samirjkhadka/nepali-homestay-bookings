@@ -1,7 +1,7 @@
-// src/lib/db/queries/search.ts
+// lib/db/queries/search.ts
 import { db } from "../db";
 import { listings, hosts } from "../schema";
-import { eq, and, ilike, gte, lte, or } from "drizzle-orm";
+import { eq, ilike, and, gte, lte, or } from "drizzle-orm";
 
 export async function searchListings({
   q = "",
@@ -16,56 +16,43 @@ export async function searchListings({
   maxPrice?: number;
   guests?: number;
 }) {
-  let query = db
-    .select({
-      id: listings.id,
-      title: listings.title,
-      location: listings.location,
-      province: listings.province,
-      priceNPR: listings.priceNPR,
-      images: listings.images,
-      isVerified: listings.isVerified,
-      instantBook: listings.instantBook,
-      maxGuests: listings.maxGuests,
-    })
-    .from(listings)
-    .where(eq(listings.status, "approved"));
+  const conditions: any[] = [eq(listings.status, "approved")];
 
   if (q) {
-    query = query.where(
-      or(
-        ilike(listings.title, `%${q}%`),
-        ilike(listings.location, `%${q}%`),
-        ilike(listings.description, `%${q}%`)
-      )
+    const searchCondition = or(
+      ilike(listings.title, `%${q}%`),
+      ilike(listings.location, `%${q}%`)
     );
+    if (searchCondition) {
+      conditions.push(searchCondition);
+    }
   }
 
   if (province) {
-    query = query.where(ilike(listings.province, province));
+    conditions.push(eq(listings.province, province));
   }
 
   if (minPrice !== undefined) {
-    query = query.where(gte(listings.priceNPR, minPrice));
+    conditions.push(gte(listings.price_npr, minPrice));
   }
 
   if (maxPrice !== undefined) {
-    query = query.where(lte(listings.priceNPR, maxPrice));
+    conditions.push(lte(listings.price_npr, maxPrice));
   }
 
   if (guests !== undefined) {
-    query = query.where(gte(listings.maxGuests, guests));
+    conditions.push(gte(listings.max_guests, guests));
   }
 
-  const rawListings = await query;
+  const rawListings = await db
+    .select()
+    .from(listings)
+    .where(conditions.length > 1 ? and(...conditions) : conditions[0]);
 
   const listingsWithHosts = await Promise.all(
     rawListings.map(async (listing) => {
       const hostData = await db
-        .select({
-          name: hosts.name,
-          avatar: hosts.avatar,
-        })
+        .select()
         .from(hosts)
         .where(eq(hosts.listingId, listing.id))
         .limit(1);
@@ -77,14 +64,15 @@ export async function searchListings({
         title: listing.title,
         location: listing.location,
         province: listing.province,
-        imageUrl: (listing.images as string[])[0],
+        imageUrl:
+          (listing.images as string[] | null)?.[0] || "/placeholder.jpg",
         hostName: mainHost.name,
         hostAvatar: mainHost.avatar || "/default-avatar.jpg",
-        priceNPR: listing.priceNPR,
-        rating: 4.8, // placeholder until reviews
+        priceNPR: listing.price_npr,
+        rating: 4.8,
         reviewCount: 89,
-        isVerified: listing.isVerified,
-        instantBook: listing.instantBook,
+        isVerified: listing.is_verified ?? false,
+        instantBook: listing.instant_book ?? false,
       };
     })
   );

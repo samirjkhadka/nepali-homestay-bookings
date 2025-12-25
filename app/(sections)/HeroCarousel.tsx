@@ -1,5 +1,5 @@
 // app/(sections)/HeroCarousel.tsx
-'use client';
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +20,7 @@ type HeroListing = {
 };
 
 type HeroCarouselProps = {
-  initialListings: HeroListing[];
+  initialListings?: HeroListing[];
 };
 
 const rates: Record<string, number> = {
@@ -31,23 +31,28 @@ const rates: Record<string, number> = {
   INR: 0.625,
 };
 
-export default function HeroCarousel({ initialListings }: HeroCarouselProps) {
+export default function HeroCarousel({
+  initialListings = [],
+}: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
   const { currency, symbol } = useCurrency();
   const listings = initialListings;
 
+  if (listings.length === 0) return null;
+
   useEffect(() => {
+    if (listings.length <= 1) return;
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % listings.length);
     }, 7000);
     return () => clearInterval(interval);
   }, [listings.length]);
 
-  const listing = listings[current];
+  const listing = listings[current] ?? listings[0];
   const price = Math.round(listing.priceNPR * rates[currency]);
 
   return (
-    <section className="relative h-screen min-h-[600px] overflow-hidden">
+    <section className="relative h-screen min-h-150 overflow-hidden">
       <Image
         src={listing.imageUrl}
         alt={listing.title}
@@ -56,16 +61,20 @@ export default function HeroCarousel({ initialListings }: HeroCarouselProps) {
         priority
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
 
       <div className="absolute inset-0 flex items-end pb-20 px-8 md:px-16">
         <div className="max-w-4xl text-white">
           <div className="flex items-center gap-4 mb-4">
             {listing.isVerified && (
-              <span className="bg-blue-600 text-xs px-3 py-1 rounded-full">Verified</span>
+              <span className="bg-blue-600 text-xs px-3 py-1 rounded-full">
+                Verified
+              </span>
             )}
             {listing.instantBook && (
-              <span className="bg-green-600 text-xs px-3 py-1 rounded-full">Instant Book</span>
+              <span className="bg-green-600 text-xs px-3 py-1 rounded-full">
+                Instant Book
+              </span>
             )}
           </div>
 
@@ -84,14 +93,17 @@ export default function HeroCarousel({ initialListings }: HeroCarouselProps) {
               />
               <div>
                 <p className="font-medium">Hosted by {listing.hostName}</p>
-                <p className="text-sm opacity-90">{listing.location}, {listing.province}</p>
+                <p className="text-sm opacity-90">
+                  {listing.location}, {listing.province}
+                </p>
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-6">
             <p className="text-5xl font-bold">
-              {symbol}{price}
+              {symbol}
+              {price}
               <span className="text-2xl font-normal opacity-90"> / night</span>
             </p>
             <Link

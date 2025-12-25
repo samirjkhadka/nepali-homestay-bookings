@@ -20,6 +20,7 @@ const mockWishlist = [
     displayPrice: 1445,
     isVerified: true,
     instantBook: true,
+    amenities: [], // ← Changed from null to empty array
   },
   {
     id: "2",
@@ -36,6 +37,7 @@ const mockWishlist = [
     displayPrice: 2235,
     isVerified: true,
     instantBook: false,
+    amenities: [], // ← Changed from null to empty array
   },
 ];
 

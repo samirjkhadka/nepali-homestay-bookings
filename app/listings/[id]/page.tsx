@@ -64,13 +64,13 @@ export default async function ListingDetailPage({
           <div className="flex items-start justify-between mb-4">
             <h1 className="text-4xl font-bold">{listingData.title}</h1>
             <div className="flex gap-3">
-              {listingData.isVerified && (
+              {listingData.is_verified && (
                 <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
                   <Verified className="w-4 h-4" />
                   Verified
                 </span>
               )}
-              {listingData.instantBook && (
+              {listingData.instant_book && (
                 <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
                   <Zap className="w-4 h-4" />
                   Instant Book
@@ -85,7 +85,7 @@ export default async function ListingDetailPage({
             </div>
             <div className="flex items-center gap-1">
               <Users className="w-5 h-5" />
-              Up to {listingData.maxGuests} guests
+              Up to {listingData.max_guests} guests
             </div>
             <div className="flex items-center gap-1">
               <BedDouble className="w-5 h-5" />
@@ -157,7 +157,7 @@ export default async function ListingDetailPage({
                     key={host.id}
                     className="flex gap-6 pb-8 border-b last:border-0"
                   >
-                    <div className="relative w-24 h-24 flex-shrink-0">
+                    <div className="relative w-24 h-24 shrink-0">
                       <Image
                         src={host.avatar || "/default-avatar.jpg"}
                         alt={host.name}

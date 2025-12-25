@@ -5,8 +5,6 @@ import { useState, useEffect } from "react";
 
 import { convertPrice } from "@/server/actions/currency";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
-import Link from "next/link";
 import { useCurrency } from "../../CurrencyProvider";
 
 export default function BookingWidget({ listing }: { listing: any }) {
@@ -15,6 +13,7 @@ export default function BookingWidget({ listing }: { listing: any }) {
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (checkIn && checkOut && checkIn < checkOut) {
@@ -36,8 +35,45 @@ export default function BookingWidget({ listing }: { listing: any }) {
     listing.priceNPR * (currency === "NPR" ? 1 : 0.0075)
   ); // rough conversion until action
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (total === 0 || loading) return;
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/bookings/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          listingId: listing.id,
+          checkIn,
+          checkOut,
+          guests,
+          totalPriceNPR: total,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.onepgUrl) {
+        window.location.href = data.onepgUrl;
+      } else {
+        alert("Payment initiation failed");
+      }
+    } catch (error) {
+      console.error("Payment failed:", error);
+      alert("Payment initiation failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="bg-card border rounded-2xl p-6 shadow-xl">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-card border rounded-2xl p-6 shadow-xl"
+    >
       <div className="flex justify-between items-baseline mb-6">
         <div>
           <span className="text-3xl font-bold">
@@ -102,15 +138,13 @@ export default function BookingWidget({ listing }: { listing: any }) {
         </div>
       )}
 
-      <Link href="/book/success">
-        <Button className="w-full py-6 text-lg font-semibold" size="lg">
-          {listing.instantBook ? "Book Instantly" : "Request to Book"}
-        </Button>
-      </Link>
+      <Button className="w-full py-6 text-lg font-semibold" size="lg">
+        {listing.instantBook ? "Book Instantly" : "Request to Book"}
+      </Button>
 
       <p className="text-center text-sm text-muted-foreground mt-4">
         You won&apos;t be charged yet
       </p>
-    </div>
+    </form>
   );
 }

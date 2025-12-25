@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from "react";
 import ListingCard from "@/components/listings/ListingCard";
-
 import { convertPrice } from "@/server/actions/currency";
 import { useCurrency } from "../CurrencyProvider";
 
@@ -20,14 +19,15 @@ type SearchListing = {
   reviewCount: number;
   isVerified: boolean;
   instantBook: boolean;
+  displayPrice: number;
+  amenities?: string[]; // ← Changed from string[] | null to optional undefined
 };
 
 type SearchResultsProps = {
   initialResults: SearchListing[];
-  searchParams: Record<string, string>;
 };
 
-export default function SearchResults({ initialResults, searchParams }: SearchResultsProps) {
+export default function SearchResults({ initialResults }: SearchResultsProps) {
   const { currency } = useCurrency();
   const [results, setResults] = useState<SearchListing[]>(initialResults);
 
@@ -37,6 +37,7 @@ export default function SearchResults({ initialResults, searchParams }: SearchRe
         initialResults.map(async (l) => ({
           ...l,
           displayPrice: await convertPrice(l.priceNPR, currency),
+          amenities: l.amenities ?? undefined, // safe conversion
         }))
       );
       setResults(withPrice);

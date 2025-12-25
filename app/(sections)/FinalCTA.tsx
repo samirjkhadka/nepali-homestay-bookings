@@ -17,7 +17,7 @@ export default function FinalCTA() {
           asChild
           size="lg"
           variant="secondary"
-          className="text-lg px-12 py-6"
+          className="bg-secondary text-lg px-12 py-6 text-white"
         >
           <Link href="/search">Find Your Homestay</Link>
         </Button>

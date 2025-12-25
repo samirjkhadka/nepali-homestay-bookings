@@ -10,23 +10,32 @@ export const dynamic = "force-dynamic";
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const params = await searchParams;
 
-  const q = params.q || "";
-  const province = params.province || "";
+  const q = params.q ?? "";
+  const province = params.province ?? "";
   const minPrice = params.minPrice ? Number(params.minPrice) : undefined;
   const maxPrice = params.maxPrice ? Number(params.maxPrice) : undefined;
   const guests = params.guests ? Number(params.guests) : undefined;
 
-  const initialResults = await searchListings({
+  const rawResults = await searchListings({
     q,
     province,
     minPrice,
     maxPrice,
     guests,
   });
+
+  // Map to SearchListing type with safe defaults
+  const initialResults = rawResults.map((l) => ({
+    ...l,
+    displayPrice: l.priceNPR,
+    amenities: [],
+    isVerified: l.isVerified ?? false,
+    instantBook: l.instantBook ?? false,
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -35,12 +44,12 @@ export default async function SearchPage({
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1">
-            <Filters searchParams={params} />
+            <Filters />
           </aside>
 
           <section className="lg:col-span-3">
             <Suspense fallback={<SearchSkeleton />}>
-              <SearchResults initialResults={initialResults} searchParams={params} />
+              <SearchResults initialResults={initialResults} />
             </Suspense>
           </section>
         </div>
