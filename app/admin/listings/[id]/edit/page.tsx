@@ -31,20 +31,15 @@ export default async function EditListingPage({
     .from(hosts)
     .where(eq(hosts.listingId, listingId));
 
-  const safeHosts =
-    listingHosts.length > 0
-      ? listingHosts
-      : [
-          {
-            id: null,
-            name: "",
-            avatar: "",
-            role: "Owner",
-            bio: "",
-            languages: [],
-            badges: [],
-          },
-        ];
+  const safeHosts = listingHosts.map((h) => ({
+    id: h.id ?? undefined,
+    name: h.name || "",
+    avatar: h.avatar || "",
+    role: h.role || "Owner",
+    bio: h.bio || "",
+    languages: h.languages || [],
+    badges: h.badges || [],
+  }));
 
   // Parse location: "Municipality, District"
   const locationParts = listing.location
@@ -71,15 +66,7 @@ export default async function EditListingPage({
     ward_no: listing.ward_no || "",
     street: listing.street || "",
     way_to_get_there: (listing.way_to_get_there as string[]) || [],
-    hosts: safeHosts.map((h) => ({
-      id: h.id,
-      name: h.name,
-      avatar: h.avatar || "",
-      role: h.role || "",
-      bio: h.bio || "",
-      languages: (h.languages as string[]) || [],
-      badges: (h.badges as string[]) || [],
-    })),
+    hosts: safeHosts,
   };
 
   return (
