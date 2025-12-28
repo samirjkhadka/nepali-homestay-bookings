@@ -8,7 +8,7 @@ export default async function YouTubeVideosSection() {
   const featuredVideos = await db
     .select()
     .from(videos)
-    .limit(3)
+    .limit(12)
     .orderBy(videos.created_at);
 
   return (
