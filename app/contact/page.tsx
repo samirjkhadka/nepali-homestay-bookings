@@ -62,12 +62,16 @@ export default function ContactPage() {
                     <Phone className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium">Phone</p>
+                    <p className="font-medium">Phone (WhatsApp/Viber)</p>
                     <p className="text-muted-foreground">
-                      +977 980-0000000 (Nepal)
+                      +977 9709072760 <br />
+                      +977 9802335913
+                      <br />
+                      +977 9709072762
+                      <br />
                     </p>
-                    <p className="text-muted-foreground">
-                      Available 9AM - 6PM NPT
+                    <p className="text-muted-foreground mt-2">
+                      Available <strong>24x7</strong>
                     </p>
                   </div>
                 </div>
@@ -78,7 +82,9 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="font-medium">Office</p>
-                    <p className="text-muted-foreground">Kathmandu, Nepal</p>
+                    <p className="text-muted-foreground">
+                      Kirtipur, Kathmandu, Nepal
+                    </p>
                   </div>
                 </div>
               </div>
