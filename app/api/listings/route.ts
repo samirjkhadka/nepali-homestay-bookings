@@ -14,8 +14,8 @@ export async function POST(request: Request) {
     description,
     location,
     province,
-    priceNPR,
-    maxGuests,
+    price_npr,
+    max_guests,
     bedrooms,
     bathrooms,
     amenities,
@@ -28,13 +28,17 @@ export async function POST(request: Request) {
     wayToGetThere,
   } = body;
 
+  console.log(body);
+
   if (
     !title ||
     !description ||
     !location ||
     !province ||
-    !priceNPR ||
+    !price_npr ||
+    !max_guests ||
     !images ||
+    !Array.isArray(images) ||
     images.length === 0
   ) {
     return NextResponse.json(
@@ -49,8 +53,8 @@ export async function POST(request: Request) {
       description,
       location,
       province,
-      price_npr: Number(priceNPR),
-      max_guests: Number(maxGuests),
+      price_npr: Number(price_npr),
+      max_guests: Number(max_guests),
       bedrooms: Number(bedrooms),
       bathrooms: Number(bathrooms),
       amenities,
@@ -61,8 +65,8 @@ export async function POST(request: Request) {
       ward_no: wardNo || null,
       street: street || null,
       way_to_get_there: wayToGetThere || [],
-      latitude: '27.7172',
-      longitude: '85.324',
+      latitude: "27.7172",
+      longitude: "85.324",
       is_verified: true,
       instant_book: false,
       status: "approved",
