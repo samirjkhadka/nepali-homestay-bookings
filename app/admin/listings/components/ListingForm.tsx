@@ -72,7 +72,7 @@ export default function ListingForm({ initialData }: ListingFormProps) {
   const [amenities, setAmenities] = useState<string[]>(
     initialData?.amenities || []
   );
-  const [images, setImages] = useState<string[]>(initialData?.images || []);
+  const [images, setImages] = useState<string[]>(Array.isArray(initialData?.images) ? initialData?.images : []);
 
   // Hosts
   const [hosts, setHosts] = useState<Host[]>(
@@ -476,7 +476,7 @@ export default function ListingForm({ initialData }: ListingFormProps) {
           Images (at least 1 required)
         </h2>
         <CldUploadButton
-          uploadPreset="nepali_homestays"
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
           onSuccess={(result: any) => {
             setImages((prev) => [...prev, result.info.secure_url]);
           }}
@@ -486,7 +486,7 @@ export default function ListingForm({ initialData }: ListingFormProps) {
           </div>
         </CldUploadButton>
 
-        {images.length > 0 && (
+        {images && images.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
             {images.map((url, i) => (
               <div key={i} className="relative h-64 rounded-xl overflow-hidden">
@@ -535,7 +535,7 @@ export default function ListingForm({ initialData }: ListingFormProps) {
               <div className="space-y-2">
                 <Label>Host Photo</Label>
                 <CldUploadButton
-                  uploadPreset="nepali_homestays"
+                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
                   onSuccess={(result: any) => {
                     updateHost(index, "avatar", result.info.secure_url);
                   }}

@@ -5,7 +5,6 @@ import { listings, hosts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import ListingForm from "../../components/ListingForm";
 
-
 export default async function EditListingPage({
   params,
 }: {
@@ -32,13 +31,28 @@ export default async function EditListingPage({
     .from(hosts)
     .where(eq(hosts.listingId, listingId));
 
+  const safeHosts =
+    listingHosts.length > 0
+      ? listingHosts
+      : [
+          {
+            id: null,
+            name: "",
+            avatar: "",
+            role: "Owner",
+            bio: "",
+            languages: [],
+            badges: [],
+          },
+        ];
+
   // Parse location: "Municipality, District"
   const locationParts = listing.location
     ? listing.location.split(",").map((s: string) => s.trim())
     : [];
   const municipality = locationParts[0] || "";
   const district = locationParts[1] || "";
-
+  const safeImages = Array.isArray(listing.images) ? listing.images : [];
   const formattedListing = {
     id: listing.id,
     title: listing.title,
@@ -53,11 +67,11 @@ export default async function EditListingPage({
     bedrooms: listing.bedrooms,
     bathrooms: listing.bathrooms,
     amenities: listing.amenities as string[],
-    images: listing.images as string[],
+    images: safeImages,
     ward_no: listing.ward_no || "",
     street: listing.street || "",
     way_to_get_there: (listing.way_to_get_there as string[]) || [],
-    hosts: listingHosts.map((h) => ({
+    hosts: safeHosts.map((h) => ({
       id: h.id,
       name: h.name,
       avatar: h.avatar || "",
