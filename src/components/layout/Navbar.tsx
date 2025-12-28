@@ -74,7 +74,7 @@ export default function Navbar() {
           {/* Right Side Controls */}
           <div className="flex items-center gap-4">
             {/* Currency Selector */}
-            <select
+            {/* <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value as any)}
               className="px-3 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
@@ -84,7 +84,7 @@ export default function Navbar() {
               <option value="EUR">EUR - €</option>
               <option value="GBP">GBP - £</option>
               <option value="INR">INR - ₹</option>
-            </select>
+            </select> */}
 
             {/* Dark Mode Toggle */}
             {/* <Button variant="ghost" size="icon" onClick={toggleTheme}>
@@ -112,11 +112,11 @@ export default function Navbar() {
             </SignedOut>
 
             <SignedIn>
-              <Link href="/wishlist">
+              {/* <Link href="/wishlist">
                 <Button variant="ghost" size="icon">
                   <Heart className="h-5 w-5" />
                 </Button>
-              </Link>
+              </Link> */}
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
 
