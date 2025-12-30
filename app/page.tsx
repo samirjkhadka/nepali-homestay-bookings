@@ -1,4 +1,5 @@
 // app/page.tsx
+import { NewsCard } from "@/components/news/NewsCard";
 import CommunityImpact from "./(sections)/CommunityImpact";
 import  ExploreByRegion  from "./(sections)/ExploreByRegionData";
 import FeaturedHomestays from "./(sections)/FeaturedHomestays";
@@ -16,6 +17,7 @@ export default function HomePage() {
       <SearchBarSection />
       <FeaturedHomestays />
       <ExploreByRegion />
+      {/* <NewsCard article={undefined} /> */}
       <WhyChooseUs />
       <CommunityImpact />
       <FinalCTA />

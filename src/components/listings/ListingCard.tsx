@@ -1,7 +1,9 @@
-// components/listings/ListingCard.tsx
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Star, ShieldCheck, Zap, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
 
 type ListingCardProps = {
   listing: {
@@ -25,85 +27,94 @@ export default function ListingCard({ listing }: ListingCardProps) {
   const amenities = (listing.amenities as string[] | null) ?? [];
 
   return (
-    <Link href={`/listings/${listing.id}`} className="block">
-      <div className="bg-card border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
-        <div className="relative h-48 md:h-56">
-          <Image
-            src={listing.imageUrl}
-            alt={listing.title}
-            fill
-            className="object-cover"
-          />
-          <div className="absolute top-3 right-3 flex flex-col gap-2">
-            {listing.isVerified && (
-              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                Verified
-              </span>
-            )}
-            {listing.instantBook && (
-              <span className="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-xs font-medium">
-                Instant Book
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2 line-clamp-2">
-            {listing.title}
-          </h3>
-          <p className="text-sm text-muted-foreground mb-3">
-            {listing.location}, {listing.province}
-          </p>
-
-          {/* Host + Price row */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Image
-                src={listing.hostAvatar}
-                alt={listing.hostName}
-                width={28}
-                height={28}
-                className="rounded-full"
-              />
-              <p className="text-sm text-muted-foreground">
-                Hosted by {listing.hostName}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-xl font-bold"> {listing.displayPrice}</p>
-              <p className="text-xs text-muted-foreground">per night</p>
-            </div>
-          </div>
-          {/* Rating + Amenities */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-medium">★ {listing.rating}</span>
-              <span className="text-xs text-muted-foreground">
-                ({listing.reviewCount})
-              </span>
-            </div>
-
-            {amenities.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {amenities.slice(0, 3).map((amenity) => (
-                  <span
-                    key={amenity}
-                    className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs"
-                  >
-                    {amenity}
-                  </span>
-                ))}
-                {amenities.length > 3 && (
-                  <span className="text-muted-foreground text-xs">
-                    +{amenities.length - 3} more
-                  </span>
+    <motion.div 
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3 }}
+      className="group"
+    >
+      <Link href={`/listings/${listing.id}`} className="block">
+        <div className="relative bg-white rounded-[2rem] overflow-hidden transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100">
+          
+          {/* Image Container */}
+          <div className="relative h-64 w-full overflow-hidden">
+            <Image
+              src={listing.imageUrl}
+              alt={listing.title}
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            
+            {/* Overlay Badges */}
+            <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+              <div className="flex flex-col gap-2">
+                {listing.isVerified && (
+                  <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md text-blue-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    Verified
+                  </div>
                 )}
               </div>
-            )}
+              
+              {listing.instantBook && (
+                <div className="bg-amber-400 text-black p-2 rounded-full shadow-lg" title="Instant Book">
+                  <Zap className="w-4 h-4 fill-current" />
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Image Gradient */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          </div>
+
+          {/* Content Area */}
+          <div className="p-6">
+            {/* Location & Rating Row */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-1.5 text-gray-500">
+                <MapPin className="w-3.5 h-3.5" />
+                <span className="text-xs font-semibold uppercase tracking-wider">{listing.location}</span>
+              </div>
+              <div className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-lg">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                <span className="text-xs font-bold text-gray-900">{listing.rating}</span>
+                <span className="text-[10px] text-gray-400">({listing.reviewCount})</span>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-1 group-hover:text-primary transition-colors">
+              {listing.title}
+            </h3>
+
+            {/* Host & Price Row */}
+            <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+              <div className="flex items-center gap-3">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-gray-50">
+                  <Image
+                    src={listing.hostAvatar}
+                    alt={listing.hostName}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <p className="text-sm font-medium text-gray-600">
+                  {listing.hostName.split(' ')[0]}
+                </p>
+              </div>
+
+              <div className="flex flex-col items-end">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-sm font-medium text-gray-500">NPR</span>
+                  <span className="text-xl font-black text-gray-900 tracking-tight">
+                    {listing.displayPrice.toLocaleString()}
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">per night</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 }

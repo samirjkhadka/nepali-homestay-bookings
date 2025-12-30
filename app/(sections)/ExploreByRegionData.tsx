@@ -32,7 +32,7 @@ export default async function ExploreByRegionData() {
   return (
     <ExploreByRegionClient 
       groupedData={grouped} 
-      defaultProvince={defaultProvince}
+      //defaultProvince={defaultProvince}
       availableProvinces={availableProvinces}
     />
   );
