@@ -1,5 +1,6 @@
 // app/page.tsx
 import CommunityImpact from "./(sections)/CommunityImpact";
+import  ExploreByRegion  from "./(sections)/ExploreByRegionData";
 import FeaturedHomestays from "./(sections)/FeaturedHomestays";
 
 import FinalCTA from "./(sections)/FinalCTA";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <HeroCarouselData />
       <SearchBarSection />
       <FeaturedHomestays />
+      <ExploreByRegion />
       <WhyChooseUs />
       <CommunityImpact />
       <FinalCTA />
