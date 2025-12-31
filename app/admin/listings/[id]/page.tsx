@@ -29,9 +29,15 @@ export default async function ViewListingDetail({
     .from(hosts)
     .where(eq(hosts.listingId, listingId));
 
-  const images = listing.images as string[];
-  const mainImage = images[0] || "/placeholder.jpg";
-  const wayToGetThere = (listing.way_to_get_there as string[]) || [];
+  const images = Array.isArray(listing.images) ? listing.images : [];
+  const mainImage = images[0] || "/default-avatar.png";
+
+  const amenities = Array.isArray(listing.amenities) ? listing.amenities : [];
+
+  // SAFE WAY TO GET THERE
+  const wayToGetThere = Array.isArray(listing.way_to_get_there)
+    ? listing.way_to_get_there
+    : [];
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -131,16 +137,22 @@ export default async function ViewListingDetail({
           {/* Amenities */}
           <section>
             <h2 className="text-2xl font-semibold mb-4">Amenities</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {(listing.amenities as string[]).map((amenity) => (
-                <div key={amenity} className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <span className="text-primary text-lg">✓</span>
+            {amenities.length === 0 ? (
+              <p className="text-muted-foreground italic">
+                No amenities listed
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {amenities.map((amenity) => (
+                  <div key={amenity} className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <span className="text-primary text-lg">✓</span>
+                    </div>
+                    <span>{amenity}</span>
                   </div>
-                  <span>{amenity}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
 
           {/* Description */}
@@ -170,37 +182,68 @@ export default async function ViewListingDetail({
             Hosts ({listingHosts.length})
           </h2>
           <div className="space-y-6">
-            {listingHosts.map((host) => (
-              <div key={host.id} className="bg-card border rounded-xl p-6">
-                <div className="flex gap-6">
-                  <div className="relative w-24 h-24 shrink-0">
-                    <Image
-                      src={host.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
-                      alt={host.name}
-                      fill
-                      className="rounded-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold">{host.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {host.role}
-                    </p>
-                    <p className="text-muted-foreground mb-4">{host.bio}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {(host.badges as string[]).map((badge) => (
-                        <span
-                          key={badge}
-                          className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs"
-                        >
-                          {badge}
-                        </span>
-                      ))}
+            {listingHosts.map((host) => {
+              // SAFE BADGES & LANGUAGES
+              const badges = Array.isArray(host.badges) ? host.badges : [];
+              const languages = Array.isArray(host.languages)
+                ? host.languages
+                : [];
+
+              return (
+                <div key={host.id} className="bg-card border rounded-xl p-6">
+                  <div className="flex gap-6">
+                    <div className="relative w-24 h-24 shrink-0">
+                      <Image
+                        src={host.avatar || "/default-avatar.png"}
+                        alt={host.name}
+                        fill
+                        className="rounded-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold">{host.name}</h3>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        {host.role}
+                      </p>
+                      <p className="text-muted-foreground mb-4">
+                        {host.bio || "No bio yet"}
+                      </p>
+
+                      {/* Languages */}
+                      {languages.length > 0 && (
+                        <div className="mb-3">
+                          <p className="text-sm font-medium mb-1">Speaks:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {languages.map((lang) => (
+                              <span
+                                key={lang}
+                                className="bg-secondary/20 text-secondary px-2.5 py-1 rounded-full text-xs"
+                              >
+                                {lang}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Badges */}
+                      {badges.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {badges.map((badge) => (
+                            <span
+                              key={badge}
+                              className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs"
+                            >
+                              {badge}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

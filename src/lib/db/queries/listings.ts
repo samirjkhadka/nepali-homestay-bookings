@@ -21,7 +21,7 @@ export async function getHeroListings(limit = 4) {
       const mainHost = hostData[0] || { name: "Local Host", avatar: null };
 
       const images = (listing.images as string[] | null) || [];
-      const mainImage = images[0] || "/placeholder.jpg";
+      const mainImage = images[0] || "/default-avatar.png";
 
       return {
         id: listing.id.toString(),

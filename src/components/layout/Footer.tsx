@@ -158,7 +158,9 @@ export default function Footer() {
           <p className="font-medium">
             Product of{" "}
             <span className="text-primary font-bold">
-              Himalayan Fox Technology
+              <a href="https://himalayanfoxtechnology.com.np" className="">
+                Himalayan Fox Technology{" "}
+              </a>
             </span>
           </p>
         </div>

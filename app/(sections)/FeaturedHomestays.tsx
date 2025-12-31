@@ -24,7 +24,7 @@ export default async function FeaturedHomestays() {
       const mainHost = hostData[0] || { name: "Local Host", avatar: null };
 
       const images = (listing.images as string[] | null) || [];
-      const mainImage = images[0] || "/placeholder.jpg";
+      const mainImage = images[0] || "/default-avatar.png";
 
       return {
         id: listing.id.toString(),
@@ -33,7 +33,7 @@ export default async function FeaturedHomestays() {
         province: listing.province,
         imageUrl: mainImage,
         hostName: mainHost.name,
-        hostAvatar: mainHost.avatar || "/default-avatar.jpg",
+        hostAvatar: mainHost.avatar || "/default-avatar.png",
         rating: 4.8, // TODO: real ratings later
         reviewCount: 89, // TODO: real count
         displayPrice: listing.price_npr,

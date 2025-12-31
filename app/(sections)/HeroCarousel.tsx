@@ -85,7 +85,7 @@ export default function HeroCarousel({
           <div className="flex items-center gap-8 mb-8 text-xl">
             <div className="flex items-center gap-3">
               <Image
-                src={listing.hostAvatar}
+                src={listing.hostAvatar || "/default-avatar.png"}
                 alt={listing.hostName}
                 width={48}
                 height={48}
