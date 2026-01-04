@@ -12,19 +12,19 @@ type Props = {
 };
 
 const PROVINCE_IMAGES: Record<string, string> = {
-  "Koshi Province":
+  "Koshi":
     "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=800",
-  "Madhesh Province":
+  "Madhesh":
     "https://images.pexels.com/photos/2104118/pexels-photo-2104118.jpeg?auto=compress&cs=tinysrgb&w=800",
   "Bagmati":
     "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=800",
-  "Gandaki Province":
+  "Gandaki":
     "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=800",
-  "Lumbini Province":
+  "Lumbini":
     "https://images.pexels.com/photos/1659438/pexels-photo-1659438.jpeg?auto=compress&cs=tinysrgb&w=800",
-  "Karnali Province":
+  "Karnali":
     "https://images.pexels.com/photos/3011630/pexels-photo-3011630.jpeg?auto=compress&cs=tinysrgb&w=800",
-  "Sudurpashchim Province":
+  "Sudurpashchim":
     "https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg?auto=compress&cs=tinysrgb&w=800",
 };
 

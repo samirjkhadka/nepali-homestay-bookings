@@ -11,12 +11,13 @@ import {
   Zap,
   Calendar,
 } from "lucide-react";
-import BookingWidget from "./BookingWidget";
+
 
 import { db } from "@/lib/db/db";
 import { listings, hosts } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import MapSection from "../../(sections)/MapSection";
+import BookingWidget from "../BookingWidgetToCall";
 
 export default async function ListingDetailPage({
   params,

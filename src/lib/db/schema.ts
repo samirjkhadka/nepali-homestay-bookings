@@ -38,6 +38,8 @@ export const listings = pgTable("listings", {
   description: text("description").notNull(),
   location: varchar("location", { length: 100 }).notNull(),
   province: varchar("province", { length: 100 }).notNull(),
+  district: varchar("district", { length: 100 }).notNull(),
+  type: varchar("homestay_type", { length: 100 }).notNull(),
   latitude: decimal("latitude", { precision: 10, scale: 8 }),
   longitude: decimal("longitude", { precision: 11, scale: 8 }),
   price_npr: integer("price_npr").notNull(),
@@ -61,6 +63,7 @@ export const listings = pgTable("listings", {
   status: varchar("status", { length: 20 }).default("pending"),
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
+
 });
 
 // Hosts table (multiple hosts per listing)
