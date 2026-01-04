@@ -60,8 +60,7 @@ export async function POST(request: Request) {
       amenities,
       images,
       homestay_type: homestayType,
-      number_of_houses:
-        homestayType === "community" ? Number(numberOfHouses) : null,
+      number_of_houses: homestayType === "community" ? Number(numberOfHouses) : null,
       ward_no: wardNo || null,
       street: street || null,
       way_to_get_there: wayToGetThere || [],
@@ -70,7 +69,9 @@ export async function POST(request: Request) {
       is_verified: true,
       instant_book: false,
       status: "approved",
-      host_id: 1, // temporary
+      host_id: 1,
+      district: "",
+      type: ""
     };
 
     const [newListing] = await db

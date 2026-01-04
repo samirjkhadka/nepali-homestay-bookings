@@ -41,9 +41,10 @@ export default async function ManageListings({
   const filterDistrict = params.district || "";
   const filterType = params.type || "";
 
-  let query = db.select().from(listings);
+  let query = db.select().from(listings).$dynamic();
+
   if (search) {
-    query = query.where(ilike(listings.title, search));
+    query = query.where(ilike(listings.title, `%${search}%`)); // Added wildcards for ilike
   }
   if (filterProvince) {
     query = query.where(eq(listings.province, filterProvince));
@@ -52,7 +53,8 @@ export default async function ManageListings({
     query = query.where(eq(listings.district, filterDistrict));
   }
   if (filterType) {
-    query = query.where(eq(listings.type, filterType));
+    // Use 'homestay_type' if that's the column name in your schema
+    query = query.where(eq(listings.homestay_type, filterType));
   }
 
   const allListings = await db.select().from(listings);
@@ -77,7 +79,7 @@ export default async function ManageListings({
           const match = l.location.match(/([^,]+),\s*([^,]+)/);
           return match ? match[2].trim() : null;
         })
-        .filter(Boolean)
+        .filter((d): d is string => d !== null)
     )
   ).sort();
 
