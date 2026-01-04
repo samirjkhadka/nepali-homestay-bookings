@@ -16,7 +16,6 @@ export default async function ExploreByRegionData() {
 
   rawListings.forEach((listing) => {
     const province = listing.province;
-    console.log(listing.province);
     const districtMatch = listing.location.match(/([^,]+),\s*([^,]+)/);
     const district = districtMatch ? districtMatch[2].trim() : "Other";
 
