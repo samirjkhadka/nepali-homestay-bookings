@@ -135,10 +135,40 @@ export default function BlogForm({ initialData }: BlogFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label>Featured Image</Label>
+        <Label>Featured Images</Label>
         <CldUploadButton
           uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!}
           onSuccess={(result: any) => setFeaturedImage(result.info.secure_url)}
+          options={{
+            maxFiles: 10,
+            maxFileSize: 700000, // 700kb
+            clientAllowedFormats: [
+              "jpeg",
+              "png",
+              "jpg",
+              "webp",
+              "gif",
+              "svg",
+              "pdf",
+            ],
+            sources: ["local", "url", "camera"],
+            thumbnailTransformation: [
+              {
+                width: 800,
+                height: 600,
+                crop: "limit",
+              },
+              {
+                quality: "auto:best",
+              },
+              {
+                format: "auto",
+              },
+              {
+                flags: "progressive",
+              },
+            ],
+          }}
         >
           <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-6 py-2 cursor-pointer">
             Upload Featured Image

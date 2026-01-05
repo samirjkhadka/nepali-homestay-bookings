@@ -1,9 +1,11 @@
 // app/admin/page.tsx
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { BedDouble, Users, FileText, Video } from "lucide-react";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function AdminHome() {
+export default async function AdminHome() {
+  
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4">

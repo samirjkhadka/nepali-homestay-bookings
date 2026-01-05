@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ClerkProvider publishableKey= {publishableKey}>
+        {/* <ClerkProvider publishableKey= {publishableKey}> */}
           <CurrencyProvider>
             <div className="flex flex-col min-h-screen">
               <Navbar />
@@ -33,7 +33,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </CurrencyProvider>
-        </ClerkProvider>
+        {/* </ClerkProvider> */}
       </body>
     </html>
   );
