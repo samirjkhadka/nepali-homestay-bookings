@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const formData = await request.formData();
   const identifier = formData.get("identifier")?.toString().trim();
   const password = formData.get("password")?.toString();
-  const redirectTo = formData.get("redirect")?.toString() || "/admin";
+  const redirectTo = formData.get("redirect")?.toString();
 
   if (!identifier || !password) {
     return NextResponse.json(
@@ -59,6 +59,7 @@ export async function POST(request: Request) {
         .from(hosts)
         .where(or(eq(hosts.email, identifier), eq(hosts.phone, identifier)));
 
+      console.log(hostAccount, "hostAccount");
       if (hostAccount) {
         account = {
           id: hostAccount.id,
@@ -82,9 +83,17 @@ export async function POST(request: Request) {
 
     await createSession(account.id, account.role, account.email);
 
-    const url =
-      redirectTo || (account.role === "admin" ? "/admin" : "/host/dashboard");
-    return NextResponse.redirect(new URL(url, request.url));
+    let finalUrl = redirectTo || "/";
+
+    if (!redirectTo) {
+      if (account.role === "admin") {
+        finalUrl = "/admin";
+      } else if (account.role === "host") {
+        finalUrl = "/host/dashboard";
+      }
+    }
+
+    return NextResponse.redirect(new URL(finalUrl, request.url));
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
