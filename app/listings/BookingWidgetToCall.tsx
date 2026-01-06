@@ -5,18 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Phone, Mail, MessageCircle } from "lucide-react";
 
 import { useEffect, useState } from "react";
-import { convertPrice } from "@/server/actions/currency";
+
 import { useCurrency } from "../CurrencyProvider";
+
 
 export default function BookingWidget({ listing }: { listing: any }) {
   const { currency, symbol } = useCurrency();
   const [displayPrice, setDisplayPrice] = useState(listing.price_npr);
 
-  useEffect(() => {
-    convertPrice(listing.price_npr, currency).then((converted) => {
-      setDisplayPrice(Math.round(converted));
-    });
-  }, [currency, listing.price_npr]);
+
 
   // Replace with real host phone when available
   const phoneNumber = "+977 9709072760"; // Central booking line
@@ -94,3 +91,7 @@ export default function BookingWidget({ listing }: { listing: any }) {
     </div>
   );
 }
+function convertPrice(price_npr: any, currency: string) {
+  throw new Error("Function not implemented.");
+}
+

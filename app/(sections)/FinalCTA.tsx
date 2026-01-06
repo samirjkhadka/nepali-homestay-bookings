@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function FinalCTA() {
   return (
     <section className="py-20 bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4 text-center">
+      <div className="container mx-auto px-4 text-center gap-4 space-x-4">
         <h2 className="text-5xl font-bold mb-6">
           Ready to Experience the Real Nepal?
         </h2>
@@ -20,6 +20,14 @@ export default function FinalCTA() {
           className="bg-secondary text-lg px-12 py-6 text-white"
         >
           <Link href="/search">Find Your Homestay</Link>
+        </Button>
+        <Button
+          asChild
+          size="lg"
+          variant="secondary"
+          className="bg-secondary text-lg px-12 py-6 text-white"
+        >
+          <Link href="/signup">List Your Homestay</Link>
         </Button>
       </div>
     </section>

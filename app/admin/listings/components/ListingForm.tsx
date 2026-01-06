@@ -25,6 +25,7 @@ import {
   MUNICIPALITIES,
 } from "@/lib/constants";
 import { Host, ListingFormProps } from "@/types/listing";
+import { Users } from "lucide-react";
 
 export default function ListingForm({ initialData }: ListingFormProps) {
   const isEdit = !!initialData?.id;
@@ -72,9 +73,12 @@ export default function ListingForm({ initialData }: ListingFormProps) {
   const [amenities, setAmenities] = useState<string[]>(
     initialData?.amenities || []
   );
-  const [images, setImages] = useState<string[]>(Array.isArray(initialData?.images) ? initialData?.images : []);
+  const [images, setImages] = useState<string[]>(
+    Array.isArray(initialData?.images) ? initialData?.images : []
+  );
 
   // Hosts
+  const [primaryHostIndex, setPrimaryHostIndex] = useState(0);
   const [hosts, setHosts] = useState<Host[]>(
     initialData?.hosts || [
       {
@@ -84,6 +88,9 @@ export default function ListingForm({ initialData }: ListingFormProps) {
         bio: "",
         languages: [],
         badges: [],
+        email: "",
+        phone: "",
+        password: "",
       },
     ]
   );
@@ -120,6 +127,9 @@ export default function ListingForm({ initialData }: ListingFormProps) {
                 bio: "",
                 languages: [],
                 badges: [],
+                email: "",
+                phone: "",
+                password: "",
               },
             ]
       );
@@ -159,6 +169,9 @@ export default function ListingForm({ initialData }: ListingFormProps) {
         bio: "",
         languages: [],
         badges: [],
+        email: "",
+        phone: "",
+        password: "",
       },
     ]);
   };
@@ -208,6 +221,7 @@ export default function ListingForm({ initialData }: ListingFormProps) {
       is_verified: true,
       instant_book: false,
       status: "approved",
+      primary_host_index: primaryHostIndex
     };
 
     const method = initialData?.id ? "PUT" : "POST";
@@ -514,28 +528,95 @@ export default function ListingForm({ initialData }: ListingFormProps) {
       {/* Hosts */}
       <section>
         <h2 className="text-2xl font-semibold mb-8">Hosts</h2>
+
+        {/* Primary Host Selection (only if multiple hosts) */}
+        {hosts.length > 1 && (
+          <div className="mb-8 p-6 bg-primary/5 border border-primary/20 rounded-xl">
+            <Label className="text-lg font-medium mb-4 block">
+              Primary Host <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={primaryHostIndex.toString()}
+              onValueChange={(v) => setPrimaryHostIndex(Number(v))}
+            >
+              <SelectTrigger className="w-full max-w-md">
+                <SelectValue placeholder="Select the primary contact host" />
+              </SelectTrigger>
+              <SelectContent>
+                {hosts.map((host, i) => (
+                  <SelectItem key={i} value={i.toString()}>
+                    {host.name || `Host ${i + 1}`}{" "}
+                    {i === primaryHostIndex && "(Current Primary)"}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground mt-2">
+              The primary host will receive notifications and login access
+            </p>
+          </div>
+        )}
+
         {hosts.map((host, index) => (
           <div key={index} className="bg-card border rounded-xl p-8 mb-8">
+            {hosts.length === 1 && (
+              <div className="mb-4 inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                <Users className="w-4 h-4" />
+                Primary Host (only one)
+              </div>
+            )}
+            {hosts.length > 1 && index === primaryHostIndex && (
+              <div className="mb-4 inline-flex items-center gap-2 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                Primary Host
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <Label>Name</Label>
+                <Label>Name *</Label>
                 <Input
                   value={host.name}
                   onChange={(e) => updateHost(index, "name", e.target.value)}
-                  required={index === 0}
+                  required
                 />
               </div>
+
+              <div className="space-y-2">
+                <Label>Email (for login) *</Label>
+                <Input
+                  type="email"
+                  value={host.email || ""}
+                  onChange={(e) => updateHost(index, "email", e.target.value)}
+                  placeholder="host@example.com"
+                  required={index === primaryHostIndex || hosts.length === 1}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Phone (optional)</Label>
+                <Input
+                  type="tel"
+                  value={host.phone || ""}
+                  onChange={(e) => updateHost(index, "phone", e.target.value)}
+                  placeholder="+977 98xxxxxxxx"
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label>Role</Label>
                 <Input
                   value={host.role}
                   onChange={(e) => updateHost(index, "role", e.target.value)}
+                  placeholder="Owner, Manager, etc."
                 />
               </div>
+
               <div className="space-y-2">
                 <Label>Host Photo</Label>
                 <CldUploadButton
-                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                  uploadPreset={
+                    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+                  }
                   onSuccess={(result: any) => {
                     updateHost(index, "avatar", result.info.secure_url);
                   }}
@@ -563,16 +644,22 @@ export default function ListingForm({ initialData }: ListingFormProps) {
                   </div>
                 )}
               </div>
+
               <div className="space-y-2">
                 <Label>Languages (comma separated)</Label>
                 <Input
                   value={host.languages.join(", ")}
                   onChange={(e) =>
-                    updateHost(index, "languages", e.target.value)
+                    updateHost(
+                      index,
+                      "languages",
+                      e.target.value.split(",").map((l) => l.trim())
+                    )
                   }
-                  placeholder="English, Nepali, Newari"
+                  placeholder="English, Nepali, Hindi"
                 />
               </div>
+
               <div className="space-y-2 md:col-span-2">
                 <Label>Bio</Label>
                 <Textarea
@@ -582,26 +669,32 @@ export default function ListingForm({ initialData }: ListingFormProps) {
                   placeholder="Tell guests about this host..."
                 />
               </div>
+
               <div className="space-y-2 md:col-span-2">
                 <Label>Badges</Label>
-                <Select
-                  onValueChange={(value) =>
-                    updateHost(index, "badges", [value])
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a badge" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {BADGES.map((badge) => (
-                      <SelectItem key={badge} value={badge}>
-                        {badge}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex flex-wrap gap-2">
+                  {BADGES.map((badge) => (
+                    <Button
+                      key={badge}
+                      type="button"
+                      variant={
+                        host.badges.includes(badge) ? "default" : "outline"
+                      }
+                      size="sm"
+                      onClick={() => {
+                        const newBadges = host.badges.includes(badge)
+                          ? host.badges.filter((b) => b !== badge)
+                          : [...host.badges, badge];
+                        updateHost(index, "badges", newBadges);
+                      }}
+                    >
+                      {badge}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </div>
+
             {hosts.length > 1 && (
               <Button
                 type="button"
@@ -614,6 +707,7 @@ export default function ListingForm({ initialData }: ListingFormProps) {
             )}
           </div>
         ))}
+
         <Button type="button" onClick={addHost} variant="outline">
           Add Another Host
         </Button>

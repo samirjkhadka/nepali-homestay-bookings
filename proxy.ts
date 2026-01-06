@@ -14,18 +14,33 @@ export const config = {
   ],
 };
 
-export  default async function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const session = await getSession();
   const pathname = request.nextUrl.pathname;
 
-  if (pathname.startsWith("/admin") && session?.role !== "admin") {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (pathname.startsWith("/admin")) {
+    if (!session) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (session.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
-  if (pathname.startsWith("/host") && session?.role !== "host") {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (pathname.startsWith("/host")) {
+    if (!session) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (session.role !== "host") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
   return NextResponse.next();
 }
-

@@ -7,6 +7,7 @@ import { CurrencyProvider } from "./CurrencyProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,13 +27,16 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         {/* <ClerkProvider publishableKey= {publishableKey}> */}
-          <CurrencyProvider>
-            <div className="flex flex-col min-h-screen">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </CurrencyProvider>
+        <CurrencyProvider>
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1">
+              {children}
+              <Toaster position="top-right" richColors closeButton />
+            </main>
+            <Footer />
+          </div>
+        </CurrencyProvider>
         {/* </ClerkProvider> */}
       </body>
     </html>

@@ -17,6 +17,20 @@ const eslintConfig = defineConfig([
   rules({
     "@typescript-eslint/no-explicit-any": "off",
   }),
+  "zones":[
+    {
+      "target": "./src/domain",
+      "from": ["./src/infrastructure", "./src/repositories", "./src/application"]
+    },
+    {
+      "target": "./src/application",
+      "from": ["./src/infrastructure"]
+    },
+    {
+      "target": "./app",
+      "from": ["./src/infrastructure", "./src/repositories"]
+    }
+  ]
 ]);
 
 export default eslintConfig;

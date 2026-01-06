@@ -15,7 +15,7 @@ import { relations } from "drizzle-orm";
 // Users table (synced with Clerk)
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  clerk_id: varchar("clerk_id", { length: 255 }).notNull().unique(),
+  clerk_id: varchar("clerk_id", { length: 255 }).unique(),
   email: varchar("email", { length: 255 }).notNull(),
   first_name: varchar("first_name", { length: 100 }),
   last_name: varchar("last_name", { length: 100 }),
@@ -40,7 +40,7 @@ export const listings = pgTable("listings", {
   location: varchar("location", { length: 100 }).notNull(),
   province: varchar("province", { length: 100 }).notNull(),
   district: varchar("district", { length: 100 }).notNull(),
-  type: varchar("homestay_type", { length: 100 }).notNull(),
+  //type: varchar("homestay_type", { length: 100 }).notNull(),
   latitude: decimal("latitude", { precision: 10, scale: 8 }),
   longitude: decimal("longitude", { precision: 11, scale: 8 }),
   price_npr: integer("price_npr").notNull(),
@@ -64,7 +64,7 @@ export const listings = pgTable("listings", {
   status: varchar("status", { length: 20 }).default("pending"),
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
-
+  primary_host_id: integer("primary_host_id").references(() => users.id),
 });
 
 // Hosts table (multiple hosts per listing)
@@ -79,6 +79,11 @@ export const hosts = pgTable("hosts", {
   bio: text("bio"),
   languages: jsonb("languages").$type<string[]>(),
   badges: jsonb("badges").$type<string[]>(),
+  password: text("password"),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  password_reset_token: varchar("password_reset_token", { length: 255 }),
+  token_expiry: timestamp("token_expiry"),
 });
 
 // Bookings table
@@ -148,4 +153,17 @@ export const videos = pgTable("videos", {
   featured: boolean("featured").default(false),
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
+});
+
+
+export const otpVerifications = pgTable("otp_verifications", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id), // pending user
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  code: varchar("code", { length: 6 }).notNull(),
+  attempts: integer("attempts").default(0), // resend count
+  maxAttempts: integer("max_attempts").default(3),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
 });

@@ -1,9 +1,11 @@
 // app/(sections)/HeroCarouselData.tsx
+import { getHeroCarouselListings } from "@/application/homepage/getHeroCarouselListings";
 import HeroCarousel from "./HeroCarousel";
-import { getHeroListings } from "@/lib/db/queries/listings";
+import { getCurrencyFromCookies } from "@/server/actions/currency";
 
 export default async function HeroCarouselData() {
-  const listings = await getHeroListings();
+  const currency = getCurrencyFromCookies();
+  const listings = await getHeroCarouselListings(await currency);
 
   if (listings.length === 0) {
     return (

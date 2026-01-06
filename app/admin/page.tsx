@@ -5,7 +5,12 @@ import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function AdminHome() {
-  
+  const session = await getSession();
+
+  if (!session || session.role !== "admin") {
+    redirect("/login?redirect=/admin");
+  }
+
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4">

@@ -20,6 +20,8 @@ type ListingCardProps = {
     isVerified: boolean;
     instantBook: boolean;
     amenities?: string[];
+    latitude?: number;
+    longitude?: number;
   };
 };
 

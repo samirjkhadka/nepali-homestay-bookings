@@ -29,6 +29,9 @@ export type Host = {
   bio?: string;
   languages: string[];
   badges: string[];
+  password?: string;
+  email: string;
+  phone: string;
 };
 
 // src/types/booking.ts

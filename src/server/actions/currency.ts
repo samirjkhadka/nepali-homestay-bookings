@@ -1,30 +1,26 @@
-// src/server/actions/currency.ts
-"use server";
+'use server';
+import { cookies } from "next/headers";
 
-import type { SupportedCurrency } from "@/types/currency";
+const SUPPORTED_CURRENCIES = ["NPR", "USD", "EUR", "GBP", "INR"] as const;
+type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
 
-// Exchange rates (NPR as base) - update monthly or pull from API later
-const EXCHANGE_RATES: Record<SupportedCurrency, number> = {
-  NPR: 1,           // Base currency
-  USD: 0.0075,      // ~1 USD ≈ 133 NPR (Dec 2025 average)
-  EUR: 0.0069,      // ~1 EUR ≈ 145 NPR
-  GBP: 0.0059,      // ~1 GBP ≈ 170 NPR
-  INR: 0.625,       // ~1 INR ≈ 1.6 NPR
-};
+const DEFAULT_CURRENCY: SupportedCurrency = "NPR";
 
-export async function convertPrice(
-  priceNPR: number,
-  targetCurrency: SupportedCurrency
-): Promise<number> {
-  if (priceNPR < 0) return 0;
+export async function getCurrencyFromCookies(): Promise<SupportedCurrency> {
+  try {
+    const cookieStore = cookies();
+    const currency = (await cookieStore).get("currency")?.value;
 
-  const rate = EXCHANGE_RATES[targetCurrency];
-  const converted = priceNPR * rate;
+    if (
+      currency &&
+      SUPPORTED_CURRENCIES.includes(currency as SupportedCurrency)
+    ) {
+      return currency as SupportedCurrency;
+    }
 
-  // Round to appropriate decimals
-  if (targetCurrency === "NPR" || targetCurrency === "INR") {
-    return Math.round(converted); // No decimals for NPR/INR
+    return DEFAULT_CURRENCY;
+  } catch {
+    // Safety for edge SSR cases
+    return DEFAULT_CURRENCY;
   }
-
-  return Math.round(converted * 100) / 100; // 2 decimals for others
 }

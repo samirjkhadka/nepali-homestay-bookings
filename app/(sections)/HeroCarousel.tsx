@@ -5,39 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCurrency } from "../CurrencyProvider";
+import { HeroCarouselItemDTO } from "@/application/homepage/heroCarousel.types";
 
-type HeroListing = {
-  id: string;
-  title: string;
-  location: string;
-  province: string;
-  priceNPR: number;
-  imageUrl: string;
-  hostName: string;
-  hostAvatar: string;
-  isVerified: boolean;
-  instantBook: boolean;
+export type HeroCarouselProps = {
+  initialListings: HeroCarouselItemDTO[];
 };
 
-type HeroCarouselProps = {
-  initialListings?: HeroListing[];
-};
-
-const rates: Record<string, number> = {
-  NPR: 1,
-  USD: 0.0075,
-  EUR: 0.0069,
-  GBP: 0.0059,
-  INR: 0.625,
-};
-
-export default function HeroCarousel({
-  initialListings = [],
-}: HeroCarouselProps) {
+export default function HeroCarousel({ initialListings }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
   const { currency, symbol } = useCurrency();
-  const listings = initialListings;
 
+  const listings = initialListings.filter((l) => l.price > 0);
   if (listings.length === 0) return null;
 
   useEffect(() => {
@@ -48,8 +26,7 @@ export default function HeroCarousel({
     return () => clearInterval(interval);
   }, [listings.length]);
 
-  const listing = listings[current] ?? listings[0];
-  const price = Math.round(listing.priceNPR * rates[currency]);
+  const listing = listings[current];
 
   return (
     <section className="relative h-screen min-h-150 overflow-hidden">
@@ -103,7 +80,7 @@ export default function HeroCarousel({
           <div className="flex items-center gap-6">
             <p className="text-5xl font-bold">
               {symbol}
-              {price}
+              {listing.price}
               <span className="text-2xl font-normal opacity-90"> / night</span>
             </p>
             <Link

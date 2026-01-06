@@ -10,6 +10,7 @@ export async function getHeroListings(limit = 4) {
     .where(eq(listings.status, "approved"))
     .limit(limit);
 
+
   const listingsWithHosts = await Promise.all(
     rawListings.map(async (listing) => {
       const hostData = await db
@@ -31,7 +32,7 @@ export async function getHeroListings(limit = 4) {
         priceNPR: listing.price_npr,
         imageUrl: mainImage,
         hostName: mainHost.name,
-        hostAvatar: mainHost.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        hostAvatar: mainHost.avatar || "/default-avatar.png",
         isVerified: listing.is_verified ?? false,
         instantBook: listing.instant_book ?? false,
       };
