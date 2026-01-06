@@ -9,6 +9,7 @@ import {
   decimal,
   jsonb,
   varchar,
+  date,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -155,7 +156,6 @@ export const videos = pgTable("videos", {
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
-
 export const otpVerifications = pgTable("otp_verifications", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id), // pending user
@@ -165,5 +165,14 @@ export const otpVerifications = pgTable("otp_verifications", {
   attempts: integer("attempts").default(0), // resend count
   maxAttempts: integer("max_attempts").default(3),
   expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const blockedDates = pgTable("blocked_dates", {
+  id: serial("id").primaryKey(),
+  listingId: integer("listing_id")
+    .references(() => listings.id)
+    .notNull(),
+  date: date("date").notNull(), // YYYY-MM-DD
   createdAt: timestamp("created_at").defaultNow(),
 });

@@ -19,9 +19,21 @@ export async function verifyPassword(hash: string, password: string) {
 export async function createSession(
   userId: number,
   role: string,
-  email: string
+  email: string,
+  phone: string,
+  name: string,
+  avatar: string,
+  bio: string
 ) {
-  const token = await new SignJWT({ userId, role, email })
+  const token = await new SignJWT({
+    userId,
+    role,
+    email,
+    phone,
+    name,
+    avatar,
+    bio,
+  })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
@@ -34,8 +46,6 @@ export async function createSession(
     path: "/",
     maxAge: 60 * 60 * 24 * 30, // 30 days
   });
-
-
 }
 
 export async function getSession() {
@@ -44,7 +54,15 @@ export async function getSession() {
 
   try {
     const { payload } = await jwtVerify(token, secret);
-    return payload as { userId: number; role: string, email: string };
+    return payload as {
+      userId: number;
+      role: string;
+      email: string;
+      phone: string;
+      name: string;
+      avatar: string;
+      bio: string;
+    };
   } catch {
     return null;
   }
